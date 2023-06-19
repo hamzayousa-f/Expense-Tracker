@@ -1,3 +1,4 @@
+import 'package:code1/widgets/chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import './models/transactions.dart';
@@ -67,6 +68,16 @@ class _HomeScreenState extends State<HomeScreen> {
     // ),
   ];
 
+  Iterable<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date!.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(String txTitle, double txamount) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
@@ -108,15 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('Chart'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransactions.toList()),
             TransactionList(_userTransactions),
+            // TransactionList(_userTransactions),
           ],
         ),
       ),
